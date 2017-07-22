@@ -21,6 +21,7 @@ def getWordmap(textfile):
         We.append(v)
     return (words, np.array(We))
 
+
 def prepare_data(list_of_seqs):
     lengths = [len(s) for s in list_of_seqs]
     n_samples = len(list_of_seqs)
@@ -33,6 +34,7 @@ def prepare_data(list_of_seqs):
     x_mask = np.asarray(x_mask, dtype='float32')
     return x, x_mask
 
+
 def lookupIDX(words,w):
     w = w.lower()
     if len(w) > 1 and w[0] == '#':
@@ -44,12 +46,14 @@ def lookupIDX(words,w):
     else:
         return len(words) - 1
 
+
 def getSeq(p1,words):
     p1 = p1.split()
     X1 = []
     for i in p1:
         X1.append(lookupIDX(words,i))
     return X1
+
 
 def getSeqs(p1,p2,words):
     p1 = p1.split()
@@ -61,6 +65,7 @@ def getSeqs(p1,p2,words):
     for i in p2:
         X2.append(lookupIDX(words,i))
     return X1, X2
+
 
 def get_minibatches_idx(n, minibatch_size, shuffle=False):
     idx_list = np.arange(n, dtype="int32")
@@ -79,6 +84,7 @@ def get_minibatches_idx(n, minibatch_size, shuffle=False):
         minibatches.append(idx_list[minibatch_start:])
 
     return zip(range(len(minibatches)), minibatches)
+
 
 def getSimEntDataset(f,words,task):
     data = open(f,'r')
@@ -102,6 +108,7 @@ def getSimEntDataset(f,words,task):
                 print(i)
     return examples
 
+
 def getSentimentDataset(f,words):
     data = open(f,'r')
     lines = data.readlines()
@@ -116,6 +123,7 @@ def getSentimentDataset(f,words):
             else:
                 print(i)
     return examples
+
 
 def getDataSim(batch, nout):
     g1 = []
@@ -145,6 +153,7 @@ def getDataSim(batch, nout):
     scores = np.asarray(scores, dtype=config.floatX)
     return (scores, g1x, g1mask, g2x, g2mask)
 
+
 def getDataEntailment(batch):
     g1 = []; g2 = []
     for i in batch:
@@ -169,6 +178,7 @@ def getDataEntailment(batch):
     scores = np.asarray(scores,dtype=config.floatX)
     return (scores,g1x,g1mask,g2x,g2mask)
 
+
 def getDataSentiment(batch):
     g1 = []
     for i in batch:
@@ -188,6 +198,7 @@ def getDataSentiment(batch):
     scores = np.matrix(scores)+0.000001
     scores = np.asarray(scores,dtype=config.floatX)
     return (scores,g1x,g1mask)
+
 
 def sentiment2idx(sentiment_file, words):
     """
@@ -219,6 +230,7 @@ def sentiment2idx(sentiment_file, words):
     x1,m1 = prepare_data(seq1)
     return x1, m1, golds
 
+
 def sim2idx(sim_file, words):
     """
     Read similarity data file, output array of word indices that can be fed into the algorithms.
@@ -242,6 +254,7 @@ def sim2idx(sim_file, words):
     x2,m2 = prepare_data(seq2)
     return x1, m1, x2, m2, golds
 
+
 def entailment2idx(sim_file, words):
     """
     Read similarity data file, output array of word indices that can be fed into the algorithms.
@@ -257,16 +270,17 @@ def entailment2idx(sim_file, words):
     for i in lines:
         i = i.split("\t")
         p1 = i[0]; p2 = i[1]; score = i[2]
-        X1, X2 = getSeqs(p1,p2,words)
+        X1, X2 = getSeqs(p1, p2, words)
         seq1.append(X1)
         seq2.append(X2)
         golds.append(score)
-    x1,m1 = prepare_data(seq1)
-    x2,m2 = prepare_data(seq2)
+    x1, m1 = prepare_data(seq1)
+    x2, m2 = prepare_data(seq2)
     return x1, m1, x2, m2, golds
 
+
 def getWordWeight(weightfile, a=1e-3):
-    if a <=0: # when the parameter makes no sense, use unweighted
+    if a <= 0:  # when the parameter makes no sense, use unweighted
         a = 1.0
 
     word2weight = {}
@@ -274,10 +288,10 @@ def getWordWeight(weightfile, a=1e-3):
         lines = f.readlines()
     N = 0
     for i in lines:
-        i=i.strip()
-        if(len(i) > 0):
-            i=i.split()
-            if(len(i) == 2):
+        i = i.strip()
+        if len(i) > 0:
+            i = i.split()
+            if len(i) == 2:
                 word2weight[i[0]] = float(i[1])
                 N += float(i[1])
             else:
@@ -285,6 +299,7 @@ def getWordWeight(weightfile, a=1e-3):
     for key, value in word2weight.iteritems():
         word2weight[key] = a / (a + value/N)
     return word2weight
+
 
 def getWeight(words, word2weight):
     weight4ind = {}
@@ -295,14 +310,16 @@ def getWeight(words, word2weight):
             weight4ind[ind] = 1.0
     return weight4ind
 
+
 def seq2weight(seq, mask, weight4ind):
     weight = np.zeros(seq.shape).astype('float32')
-    for i in xrange(seq.shape[0]):
-        for j in xrange(seq.shape[1]):
-            if mask[i,j] > 0 and seq[i,j] >= 0:
-                weight[i,j] = weight4ind[seq[i,j]]
+    for i in range(seq.shape[0]):
+        for j in range(seq.shape[1]):
+            if mask[i, j] > 0 and seq[i,j] >= 0:
+                weight[i, j] = weight4ind[seq[i, j]]
     weight = np.asarray(weight, dtype='float32')
     return weight
+
 
 def getIDFWeight(wordfile, save_file=''):
     def getDataFromFile(f, words):
@@ -314,13 +331,13 @@ def getIDFWeight(wordfile, save_file=''):
         for i in lines:
             i = i.split("\t")
             p1 = i[0]; p2 = i[1]; score = float(i[2])
-            X1, X2 = getSeqs(p1,p2,words)
+            X1, X2 = getSeqs(p1, p2, words)
             seq1.append(X1)
             seq2.append(X2)
             golds.append(score)
-        x1,m1 = prepare_data(seq1)
-        x2,m2 = prepare_data(seq2)
-        return x1,m1,x2,m2
+        x1, m1 = prepare_data(seq1)
+        x2, m2 = prepare_data(seq2)
+        return x1, m1, x2, m2
 
     prefix = "../data/"
     farr = ["MSRpar2012"]
@@ -356,17 +373,17 @@ def getIDFWeight(wordfile, save_file=''):
         g1x,g1mask,g2x,g2mask = getDataFromFile(prefix+f, words)
         dlen += g1x.shape[0]
         dlen += g2x.shape[0]
-        for i in xrange(g1x.shape[0]):
-            for j in xrange(g1x.shape[1]):
+        for i in range(g1x.shape[0]):
+            for j in range(g1x.shape[1]):
                 if g1mask[i,j] > 0:
                     df[g1x[i,j]] += 1
-        for i in xrange(g2x.shape[0]):
-            for j in xrange(g2x.shape[1]):
+        for i in range(g2x.shape[0]):
+            for j in range(g2x.shape[1]):
                 if g2mask[i,j] > 0:
                     df[g2x[i,j]] += 1
 
     weight4ind = {}
-    for i in xrange(len(df)):
+    for i in range(len(df)):
         weight4ind[i] = np.log2((dlen+2.0)/(1.0+df[i]))
     if save_file:
         pickle.dump(weight4ind, open(save_file, 'w'))

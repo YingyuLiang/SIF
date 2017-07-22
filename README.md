@@ -1,3 +1,7 @@
+right now, all the new content reside under entailment...
+
+
+...
 # SIF
 
 This is the code for [the paper](https://openreview.net/forum?id=SyK00v5xx) "A Simple but Tough-to-Beat Baseline for Sentence Embeddings".

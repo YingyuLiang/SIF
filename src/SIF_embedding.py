@@ -12,11 +12,12 @@ def get_weighted_average(We, x, w):
     """
     n_samples = x.shape[0]
     emb = np.zeros((n_samples, We.shape[1]))
-    for i in xrange(n_samples):
+    for i in range(n_samples):
         emb[i,:] = w[i,:].dot(We[x[i,:],:]) / np.count_nonzero(w[i,:])
     return emb
 
-def compute_pc(X,npc=1):
+
+def compute_pc(X, npc=1):
     """
     Compute the principal components. DO NOT MAKE THE DATA ZERO MEAN!
     :param X: X[i,:] is a data point
@@ -27,6 +28,7 @@ def compute_pc(X,npc=1):
     svd.fit(X)
     return svd.components_
 
+
 def remove_pc(X, npc=1):
     """
     Remove the projection on the principal components
@@ -35,7 +37,7 @@ def remove_pc(X, npc=1):
     :return: XX[i, :] is the data point after removing its projection
     """
     pc = compute_pc(X, npc)
-    if npc==1:
+    if npc == 1:
         XX = X - X.dot(pc.transpose()) * pc
     else:
         XX = X - X.dot(pc.transpose()).dot(pc)
@@ -52,6 +54,6 @@ def SIF_embedding(We, x, w, params):
     :return: emb, emb[i, :] is the embedding for sentence i
     """
     emb = get_weighted_average(We, x, w)
-    if  params.rmpc > 0:
+    if params.rmpc > 0:
         emb = remove_pc(emb, params.rmpc)
     return emb
