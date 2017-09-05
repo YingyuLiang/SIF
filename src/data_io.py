@@ -8,17 +8,18 @@ from theano import config
 def getWordmap(textfile):
     words={}
     We = []
-    f = open(textfile,'r')
-    lines = f.readlines()
-    for (n,i) in enumerate(lines):
-        i=i.split()
-        j = 1
-        v = []
-        while j < len(i):
-            v.append(float(i[j]))
-            j += 1
-        words[i[0]]=n
-        We.append(v)
+    with open(textfile,'r') as f:
+        n = 0
+        for line in f:
+            i = line.split()
+            j = 1
+            v = []
+            while j < len(i):
+                v.append(float(i[j]))
+                j += 1
+            words[i[0]]=n
+            We.append(v)
+            n+=1
     return (words, np.array(We))
 
 def prepare_data(list_of_seqs):
