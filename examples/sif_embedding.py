@@ -15,7 +15,7 @@ sentences = ['this is an example sentence', 'this is another sentence that is sl
 word2weight = data_io.getWordWeight(weightfile, weightpara) # word2weight['str'] is the weight for the word 'str'
 weight4ind = data_io.getWeight(words, word2weight) # weight4ind[i] is the weight for the i-th word
 # load sentences
-x, m, _ = data_io.sentences2idx(sentences, words) # x is the array of word indices, m is the binary mask indicating whether there is a word in that location
+x, m = data_io.sentences2idx(sentences, words) # x is the array of word indices, m is the binary mask indicating whether there is a word in that location
 w = data_io.seq2weight(x, m, weight4ind) # get word weights
 
 # set parameters

@@ -20,7 +20,7 @@ To get started, cd into the directory examples/ and run demo.sh. It downloads th
 * sim_sif.py and sim_tfidf.py are for the textual similarity tasks in the paper,
 * supervised_sif_proj.sh is for the supervised tasks in the paper.
 
-Check these files to see the options.
+Check these files to see the options. Make sure you create "log" folder in "example" directory before running above code.
 
 ## Source code
 The code is separated into the following parts:

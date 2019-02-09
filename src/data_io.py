@@ -196,6 +196,7 @@ def sentences2idx(sentences, words):
     :param words: a dictionary, words['str'] is the indices of the word 'str'
     :return: x1, m1. x1[i, :] is the word indices in sentence i, m1[i,:] is the mask for sentence i (0 means no word at the location)
     """
+    seq1 = []
     for i in sentences:
         seq1.append(getSeq(i,words))
     x1,m1 = prepare_data(seq1)
