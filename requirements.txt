@@ -3,3 +3,4 @@ scipy
 sklearn
 theano
 lasagne
+future
