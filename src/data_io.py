@@ -11,7 +11,7 @@ def getWordmap(textfile):
     f = open(textfile,'r')
     lines = f.readlines()
     for (n,i) in enumerate(lines):
-        i=i.split()
+        i=i.split(" ")
         j = 1
         v = []
         while j < len(i):
